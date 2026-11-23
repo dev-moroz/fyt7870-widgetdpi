@@ -4,6 +4,13 @@ Proper scaling for apps shown inside the built-in widgets of stock FYT UIS7870 t
 
 Stock themes (`launcher_v2` and others) render the map / player widgets on separate virtual displays `Embedded_Task@…` with DPI 160. The global display size setting and `wm density` don't affect them, so everything inside looks tiny.
 
+## Screenshots
+Google Maps, stock DPI 240 vs DPI 300:
+
+| **Stock** — DPI 240 (before) | **Modified** with WidgetDPI — DPI 300 (after) |
+|---|---|
+| ![240](docs/dpi_240_stock.png) | ![300](docs/dpi_300_current.png) |
+
 ## Features
 - Keeps DPI 300 on `Embedded_Task*` displays and on the main display.
 - Watches for the displays being recreated (theme switch, ACC sleep/wake) and reapplies the value immediately.
