@@ -1,0 +1,6 @@
+build/
+out/
+*.jks
+*.keystore
+*.idsig
+.DS_Store
