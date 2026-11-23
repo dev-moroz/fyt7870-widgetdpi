@@ -1,50 +1,50 @@
 # WidgetDPI — fix tiny apps in FYT 7870 theme widgets
 
-Нормальный масштаб приложений во встроенных виджетах штатных тем FYT UIS7870 (Android 13). Без root.
+Proper scaling for apps shown inside the built-in widgets of stock FYT UIS7870 themes (Android 13). No root.
 
-Штатные темы (`launcher_v2` и др.) показывают карту/плеер во встроенных окнах на отдельных виртуальных дисплеях `Embedded_Task@…` с DPI 160. Общий масштаб и `wm density` на них не действуют, поэтому всё мелкое.
+Stock themes (`launcher_v2` and others) render the map / player widgets on separate virtual displays `Embedded_Task@…` with DPI 160. The global display size setting and `wm density` don't affect them, so everything inside looks tiny.
 
-## Возможности
-- Держит DPI 300 на дисплеях `Embedded_Task*` и на основном экране.
-- Следит за пересозданием дисплеев (смена темы, сон по ACC) и сразу возвращает значение.
-- Автозапуск при включении (~15 с после старта).
+## Features
+- Keeps DPI 300 on `Embedded_Task*` displays and on the main display.
+- Watches for the displays being recreated (theme switch, ACC sleep/wake) and reapplies the value immediately.
+- Starts automatically on boot (~15 s after power-on).
 
-## Установка
-Один раз нужен ADB — с ПК или прямо с магнитолы через LADB / Shizuku.
+## Install
+ADB is needed once — from a PC or directly on the head unit via LADB / Shizuku.
 ```
 adb install -r widgetdpi.apk
 adb shell settings put global hidden_api_policy 1
 adb shell pm grant com.mediacar.widgetdpi android.permission.WRITE_SECURE_SETTINGS
 ```
-Затем открыть приложение один раз. Или запустить `install.sh`.
+Then open the app once. Or just run `install.sh`.
 
-## Откат
-`uninstall.sh`, или:
+## Uninstall / rollback
+Run `uninstall.sh`, or:
 ```
 adb uninstall com.mediacar.widgetdpi
 adb shell settings delete global hidden_api_policy
 adb shell wm density reset
 ```
 
-## Проверить вручную без приложения
+## Try it manually without the app
 ```
 adb shell dumpsys display | grep Embedded_Task
 adb shell wm density 300 -d <id>
 ```
-Сбрасывается после перезагрузки — для этого и нужно приложение.
+This resets after a reboot — that's what the app is for.
 
-## Как это работает
-`DisplayManager.DisplayListener` + `IWindowManager.setForcedDisplayDensityForUser(displayId, 300, userId)` через рефлексию. Нужны `WRITE_SECURE_SETTINGS` (выдаётся `pm grant`) и `hidden_api_policy=1`.
+## How it works
+`DisplayManager.DisplayListener` + `IWindowManager.setForcedDisplayDensityForUser(displayId, 300, userId)` via reflection. Requires `WRITE_SECURE_SETTINGS` (granted with `pm grant`) and `hidden_api_policy=1`.
 
-## Сборка
+## Build
 ```
 KS=my.jks KS_PASS=... ./build.sh
 ```
 
-## Проверено
-FYT UIS7870 6/128, Android 13 (сборка 2026-05-08), тема launcher_v2. Без гарантий.
+## Tested on
+FYT UIS7870 6/128, Android 13 (build date 2026-05-08), theme launcher_v2. No warranty.
 
-## Ограничения
-DPI (300) задан в коде (`DensityFixer.java`, `TARGET`). Ручной масштаб основного экрана приложение перезапишет.
+## Limitations
+DPI (300) is hardcoded in `DensityFixer.java` (`TARGET`). The app will override any manual main display density.
 
-Лицензия: MIT.
+License: MIT.
